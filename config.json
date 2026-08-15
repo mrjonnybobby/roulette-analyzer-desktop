@@ -1,0 +1,9 @@
+{
+  "appUrl": "https://rouletteanalyzer.app",
+  "activateEndpoint": "https://rouletteanalyzer.app/api/license/activate",
+  "checkEndpoint": "https://rouletteanalyzer.app/api/license/check",
+  "offlineGraceDays": 7,
+  "recheckEveryHours": 24,
+  "windowWidth": 1280,
+  "windowHeight": 860
+}

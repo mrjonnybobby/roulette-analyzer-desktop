@@ -1,0 +1,62 @@
+{
+  "name": "roulette-analyzer-desktop",
+  "productName": "Roulette Analyzer",
+  "version": "1.1.0",
+  "description": "Настольная оболочка Roulette Analyzer с активацией по коду и привязкой к ПК",
+  "author": "mgilenko",
+  "private": true,
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "build": "electron-builder --win portable --x64",
+    "build:installer": "electron-builder --win nsis --x64",
+    "dist": "electron-builder --win --x64",
+    "publish": "electron-builder --win --x64 --publish always",
+    "postinstall": "electron-builder install-app-deps"
+  },
+  "build": {
+    "appId": "app.rouletteanalyzer.desktop",
+    "productName": "Roulette Analyzer",
+    "artifactName": "RouletteAnalyzer-${version}-portable.${ext}",
+    "files": [
+      "main.js",
+      "preload.js",
+      "license.js",
+      "activation.html",
+      "activation.js",
+      "activation.css",
+      "config.json",
+      "build/icon.ico"
+    ],
+    "win": {
+      "target": [
+        { "target": "nsis", "arch": ["x64"] },
+        { "target": "portable", "arch": ["x64"] }
+      ],
+      "icon": "build/icon.ico"
+    },
+    "publish": [
+      {
+        "provider": "github",
+        "owner": "mrjonnybobby",
+        "repo": "roulette-analyzer-desktop"
+      }
+    ],
+    "portable": {
+      "artifactName": "RouletteAnalyzer-${version}-portable.exe"
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "artifactName": "RouletteAnalyzer-${version}-setup.exe"
+    }
+  },
+  "dependencies": {
+    "electron-updater": "^6.3.9"
+  },
+  "devDependencies": {
+    "electron": "^31.7.7",
+    "electron-builder": "^24.13.3"
+  }
+}

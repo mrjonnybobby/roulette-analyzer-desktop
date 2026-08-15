@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Активация — Roulette Analyzer</title>
+  <link rel="stylesheet" href="activation.css" />
+</head>
+<body>
+  <main class="card">
+    <div class="logo" aria-hidden="true">
+      <svg viewBox="0 0 48 48" width="48" height="48" fill="none">
+        <circle cx="24" cy="24" r="21" stroke="currentColor" stroke-width="2.5"/>
+        <circle cx="24" cy="24" r="6" fill="currentColor"/>
+        <path d="M24 3v10M24 35v10M3 24h10M35 24h10" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <h1>Roulette Analyzer</h1>
+    <p class="sub">Введите код доступа, чтобы активировать приложение на этом компьютере.</p>
+
+    <div id="reasonBox" class="reason" hidden></div>
+
+    <form id="form" autocomplete="off">
+      <label for="key">Код доступа (18 символов)</label>
+      <input id="key" name="key" type="text" maxlength="18" spellcheck="false"
+             placeholder="Напр. aB3kL9mQ2rT7wX1zY0" />
+      <button id="btn" type="submit">Активировать</button>
+    </form>
+
+    <div id="msg" class="msg" hidden></div>
+
+    <div class="device">
+      <span class="device-label">Этот компьютер:</span>
+      <span id="deviceLabel">—</span>
+      <span class="device-id" id="deviceId"></span>
+    </div>
+
+    <p class="fineprint">
+      Код привязывается к этому ПК при первой активации. Перенос на другой
+      компьютер — только через администратора (перепривязка кода).
+      Приложение работает офлайн ограниченное время между онлайн-проверками.
+    </p>
+  </main>
+  <script src="activation.js"></script>
+</body>
+</html>

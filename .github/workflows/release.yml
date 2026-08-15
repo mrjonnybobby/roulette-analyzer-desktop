@@ -1,0 +1,32 @@
+name: Release Windows build
+
+# Собирает Windows-установщик и публикует его в GitHub Releases
+# при каждом пуше тега вида v1.1.0, v1.2.0 и т.д.
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write   # нужно, чтобы electron-builder мог создать релиз и залить файлы
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build and publish to GitHub Releases
+        run: npm run publish
+        env:
+          # GITHUB_TOKEN выдаётся автоматически, вручную создавать не нужно.
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
