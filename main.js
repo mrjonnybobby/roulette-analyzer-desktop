@@ -55,6 +55,9 @@ function createWindow() {
       nodeIntegration: false,
       sandbox: false,
       devTools: IS_DEV, // в проде DevTools отключены полностью
+      // Явная ПОСТОЯННАЯ партиция: localStorage сайта (настройки, галочки,
+      // раскладка) сохраняется между запусками приложения, а не сбрасывается.
+      partition: "persist:roulette",
     },
   });
 
@@ -93,6 +96,18 @@ function toggleAlwaysOnTop() {
   win.setAlwaysOnTop(on, "floating");
   writeState({ alwaysOnTop: on });
   buildMenu(); // обновить галочку в меню
+}
+
+// Ctrl+Shift+M — переключатель компактного окна.
+// Если окно уже маленькое (мини) — возвращаем обычный размер, иначе — сжимаем.
+function toggleCompactWindow() {
+  if (!win) return;
+  const [w] = win.getSize();
+  if (w <= 420) {
+    win.setSize(CONFIG.windowWidth || 1280, CONFIG.windowHeight || 860);
+  } else {
+    win.setSize(340, 460);
+  }
 }
 
 function loadActivation() {
@@ -182,12 +197,13 @@ function buildMenu() {
           click: toggleAlwaysOnTop,
         },
         {
-          label: "Компактное окно",
+          label: "Компактное окно (вкл/выкл)",
           accelerator: "CmdOrCtrl+Shift+M",
-          click: () => { if (win) win.setSize(340, 460); },
+          click: toggleCompactWindow,
         },
         {
           label: "Обычный размер",
+          accelerator: "CmdOrCtrl+Shift+N",
           click: () => { if (win) win.setSize(CONFIG.windowWidth || 1280, CONFIG.windowHeight || 860); },
         },
       ],
