@@ -37,6 +37,38 @@ try {
 }
 
 let win = null;
+let splash = null;
+
+// Небольшая заставка-загрузка: фреймлесс-окно с анимированным колесом,
+// показывается пока грузится сайт, затем плавно закрывается.
+function createSplash() {
+  splash = new BrowserWindow({
+    width: 320,
+    height: 300,
+    frame: false,
+    transparent: true,
+    resizable: false,
+    movable: true,
+    center: true,
+    alwaysOnTop: true,
+    skipTaskbar: true,
+    backgroundColor: "#00000000",
+    hasShadow: false,
+    webPreferences: { contextIsolation: true, nodeIntegration: false },
+  });
+  splash.loadFile(path.join(__dirname, "splash.html"));
+  splash.on("closed", () => { splash = null; });
+}
+
+// Закрыть заставку и показать главное окно (когда контент готов).
+function dismissSplash() {
+  if (win && !win.isVisible()) {
+    try { win.show(); win.focus(); } catch (_) {}
+  }
+  if (splash) {
+    try { splash.close(); } catch (_) { splash = null; }
+  }
+}
 
 function createWindow() {
   const st = readState();
@@ -46,6 +78,7 @@ function createWindow() {
     // Компактное окно: минимум под мини-режим сайта (только сигнал крупно).
     minWidth: 300,
     minHeight: 380,
+    show: false, // показываем только когда контент готов (через заставку)
     backgroundColor: "#05070d",
     autoHideMenuBar: true,
     alwaysOnTop: !!st.alwaysOnTop,
@@ -119,7 +152,18 @@ function loadApp() {
 }
 
 async function bootstrap() {
+  createSplash();
   createWindow();
+
+  // Страховка: в любом случае убрать заставку через 12 с (если сайт туго грузится).
+  const splashSafety = setTimeout(dismissSplash, 12000);
+  // Когда контент (сайт или экран активации) готов — показать окно, закрыть заставку.
+  win.webContents.once("did-finish-load", () => {
+    clearTimeout(splashSafety);
+    // Небольшая задержка — чтобы сайт успел отрисовать первый кадр.
+    setTimeout(dismissSplash, 350);
+  });
+
   const status = await license.verifyOnStartup();
   if (status.state === "ok") {
     loadApp();
